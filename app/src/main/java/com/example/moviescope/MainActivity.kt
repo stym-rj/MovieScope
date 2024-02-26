@@ -1,7 +1,9 @@
 package com.example.moviescope
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.style.BulletSpan
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -18,7 +20,7 @@ import retrofit2.Call
 import retrofit2.Response
 import javax.security.auth.callback.Callback
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MyItemClickListener {
 
     private lateinit var binding:ActivityMainBinding
     private var genreHash = HashMap<Int, GenreData>()
@@ -37,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         binding.pb.visibility = View.VISIBLE
         val hash: HashMap<Int, ArrayList<MoviesData>> = HashMap()
         var moviesData = listOf<MoviesData>()
-        genreAdapter = GenreAdapter(this, genreHash, hash, genreKeys)
+        genreAdapter = GenreAdapter(this, genreHash, hash, genreKeys, this)
         binding.rvVertical.layoutManager = LinearLayoutManager(this,RecyclerView.VERTICAL, false)
         binding.rvVertical.adapter = genreAdapter
 
@@ -95,27 +97,20 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
 
-
-//        genreApi.fetchGenre().enqueue(object : retrofit2.Callback<List<GenreData>?> {
-//            override fun onResponse(
-//                call: Call<List<GenreData>?>,
-//                response: Response<List<GenreData>?>
-//            ) {
-//                if (response.isSuccessful) {
-//                    binding.pb.visibility = View.GONE
-//                    binding.rvVertical.visibility = View.VISIBLE
-//
-//                    val data = response.body() ?: listOf()
-//                        Log.d("printing hash",  hash.toString())
-//                        Log.d("printing movies",  moviesData.toString())
-//                    genreAdapter.refreshList(data, hash)
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<List<GenreData>?>, t: Throwable) {
-//                Toast.makeText(this@MainActivity, "${t.message}", Toast.LENGTH_LONG).show()
-//            }
-//        })
+    override fun onItemClicked(data: MoviesData) {
+        Intent(this, MovieDescription::class.java).also {
+            it.putExtra("backgroundImage", data.backgroundImage)
+            it.putExtra("posterImage", data.poster)
+            it.putExtra("movieTitle", data.movieTitle)
+            it.putExtra("rating", data.rating)
+            it.putExtra("ratingCount", data.ratingCount)
+            it.putExtra("about", data.about)
+            it.putExtra("language", data.language)
+            it.putIntegerArrayListExtra("genre", ArrayList(data.genreList))
+            it.putExtra("releaseDate", data.releaseDate)
+            startActivity(it)
+        }
     }
 }

@@ -14,9 +14,9 @@ class GenreViewHolder(
 ): RecyclerView.ViewHolder(binding.root) {
 
     private lateinit var moviesAdapter: MovieAdapter
-    fun bind(context: Context, data: GenreData, moviesList: ArrayList<MoviesData>?) {
+    fun bind(context: Context, data: GenreData, moviesList: ArrayList<MoviesData>?, listener: MyItemClickListener) {
         binding.tvGenre.text = data.name
-        moviesAdapter = MovieAdapter(moviesList!!, context)
+        moviesAdapter = MovieAdapter(moviesList!!, context, listener)
         binding.rvHorizontal.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         binding.rvHorizontal.adapter = moviesAdapter
         moviesAdapter.refreshList(moviesList)
@@ -27,7 +27,8 @@ class GenreAdapter(
     private var context: Context,
     private var genres: HashMap<Int, GenreData>,
     private var hash: HashMap<Int, ArrayList<MoviesData>>,
-    private var genreKeys: MutableList<Int>
+    private var genreKeys: MutableList<Int>,
+    private val listener: MyItemClickListener
 ): RecyclerView.Adapter<GenreViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GenreViewHolder {
         return GenreViewHolder(
@@ -42,7 +43,7 @@ class GenreAdapter(
     override fun getItemCount() = genreKeys.size
 
     override fun onBindViewHolder(holder: GenreViewHolder, position: Int) {
-        holder.bind(context, genres[genreKeys[position]]!!, hash[genreKeys[position]])
+        holder.bind(context, genres[genreKeys[position]]!!, hash[genreKeys[position]], listener)
     }
 
     fun refreshList(
