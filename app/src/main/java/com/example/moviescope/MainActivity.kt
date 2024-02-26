@@ -3,7 +3,8 @@ package com.example.moviescope
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.style.BulletSpan
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -11,6 +12,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.CompositePageTransformer
+import androidx.viewpager2.widget.MarginPageTransformer
+import androidx.viewpager2.widget.ViewPager2
 import com.example.moviescope.databinding.ActivityMainBinding
 import com.example.moviescope.networkUtils.GenreData
 import com.example.moviescope.networkUtils.MoviesData
@@ -18,7 +22,8 @@ import com.example.moviescope.networkUtils.genreApi
 import com.example.moviescope.networkUtils.moviesApi
 import retrofit2.Call
 import retrofit2.Response
-import javax.security.auth.callback.Callback
+import java.lang.Math.abs
+import java.util.Arrays
 
 class MainActivity : AppCompatActivity(), MyItemClickListener {
 
@@ -26,6 +31,10 @@ class MainActivity : AppCompatActivity(), MyItemClickListener {
     private var genreHash = HashMap<Int, GenreData>()
     private var genreKeys = mutableListOf<Int>()
     private lateinit var genreAdapter: GenreAdapter
+    private lateinit var viewPager: ViewPager2
+    private lateinit var handler: Handler
+    private lateinit var imageList: ArrayList<Int>
+    private lateinit var slideShowAdapter: SlideShowAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +45,21 @@ class MainActivity : AppCompatActivity(), MyItemClickListener {
         setContentView(binding.root)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
+//        Slide Show
+        slideShowInit()
+        setUpTransformer()
+        viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                handler.removeCallbacks(runnable)
+                handler.postDelayed(runnable, 5000)
+            }
+        })
+
+
         binding.pb.visibility = View.VISIBLE
         val hash: HashMap<Int, ArrayList<MoviesData>> = HashMap()
-        var moviesData = listOf<MoviesData>()
+        var moviesData: List<MoviesData>
         genreAdapter = GenreAdapter(this, genreHash, hash, genreKeys, this)
         binding.rvVertical.layoutManager = LinearLayoutManager(this,RecyclerView.VERTICAL, false)
         binding.rvVertical.adapter = genreAdapter
@@ -97,6 +118,52 @@ class MainActivity : AppCompatActivity(), MyItemClickListener {
             }
 
         })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        handler.removeCallbacks(runnable)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        handler.postDelayed(runnable, 5000)
+    }
+
+    private val runnable = Runnable {
+        viewPager.currentItem = viewPager.currentItem + 1
+    }
+
+    private fun slideShowInit() {
+        viewPager = binding.viewPager
+        handler = Handler(Looper.myLooper()!!)
+        imageList = ArrayList(
+            listOf(
+                R.drawable.avatar,
+                R.drawable.avengers_endgame,
+                R.drawable.avengers_infinitywar,
+                R.drawable.thor,
+                R.drawable.justice_league,
+                R.drawable.once_upon_a_time,
+                R.drawable.onward,
+                R.drawable.mortal_engines )
+        )
+
+        slideShowAdapter = SlideShowAdapter(imageList, viewPager)
+        binding.viewPager.adapter = slideShowAdapter
+        binding.viewPager.offscreenPageLimit = 3
+        binding.viewPager.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+    }
+
+    private fun setUpTransformer() {
+        val transformer = CompositePageTransformer()
+        transformer.addTransformer(MarginPageTransformer(40))
+        transformer.addTransformer {page, position ->
+            val r = 1 - kotlin.math.abs(position)
+            page.scaleY = 0.85f + r * 0.14f
+        }
+
+        viewPager.setPageTransformer(transformer)
     }
 
     override fun onItemClicked(data: MoviesData) {

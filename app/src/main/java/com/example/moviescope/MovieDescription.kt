@@ -3,16 +3,12 @@ package com.example.moviescope
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.example.moviescope.databinding.ActivityMainMovieListBinding
 import com.example.moviescope.databinding.ActivityMovieDescriptionBinding
 import com.example.moviescope.networkUtils.GenreData
 import com.example.moviescope.networkUtils.genreApi
 import retrofit2.Call
 import retrofit2.Response
-import java.lang.StringBuilder
 
 class MovieDescription : AppCompatActivity() {
 
