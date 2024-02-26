@@ -2,9 +2,17 @@ package com.example.moviescope
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.example.moviescope.databinding.ActivityMainMovieListBinding
 import com.example.moviescope.databinding.ActivityMovieDescriptionBinding
+import com.example.moviescope.networkUtils.GenreData
+import com.example.moviescope.networkUtils.genreApi
+import retrofit2.Call
+import retrofit2.Response
+import java.lang.StringBuilder
 
 class MovieDescription : AppCompatActivity() {
 
@@ -36,11 +44,29 @@ class MovieDescription : AppCompatActivity() {
 
         Glide.with(this).load("${imageUrlPrefix}${backgroundImage}").into(binding.ivMovieBackground)
         binding.tvMovieName.text = movieTitle
-        binding.tvRatingCount.text = "(${ratingCount.toString()})"
+        binding.tvRatingCount.text = "($ratingCount)"
         binding.rbRating.rating = rating / 2f
         binding.tvAbout.text = about
         binding.tvLanguage.text = language
-        binding.tvGenre.text = genre.toString()
+
+        var genreList: ArrayList<String> = ArrayList()
+        genreApi.fetchGenre().enqueue(object : retrofit2.Callback<List<GenreData>?> {
+            override fun onResponse(
+                call: Call<List<GenreData>?>,
+                response: Response<List<GenreData>?>
+            ) {
+                if (response.isSuccessful) {
+                    val data = response.body() ?: listOf()
+                    genreList = ArrayList(data.filter { it -> it.id in genre!!.toList() }.map { it -> it.name })
+
+                    binding.tvGenre.text = genreList.joinToString(separator = ", ")
+                }
+            }
+
+            override fun onFailure(call: Call<List<GenreData>?>, t: Throwable) {
+                Log.d("printing failure in genre : ", "${t.message}")
+            }
+        })
         binding.tvReleaseDate.text = releaseDate
         Glide.with(this).load("${imageUrlPrefix}${posterImage}").into(binding.iv1)
         Glide.with(this).load("${imageUrlPrefix}${backgroundImage}").into(binding.iv2)

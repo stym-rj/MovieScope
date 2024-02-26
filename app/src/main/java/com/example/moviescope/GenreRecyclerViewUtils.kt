@@ -55,6 +55,6 @@ class GenreAdapter(
         hash = newHashDataMap
         genreKeys = newGenreKeys
 
-        notifyDataSetChanged()
+        notifyItemChanged(genres.size)
     }
 }

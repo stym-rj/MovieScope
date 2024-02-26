@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.moviescope.databinding.ActivityMainGenreListBinding
 import com.example.moviescope.databinding.ActivityMainMovieListBinding
-import com.example.moviescope.networkUtils.GenreData
 import com.example.moviescope.networkUtils.MoviesData
 
 class MoviesViewHolder(
@@ -27,7 +25,7 @@ class MoviesViewHolder(
 class MovieAdapter(
     private var movieList: ArrayList<MoviesData>,
     private var context: Context,
-    private val listener: MyItemClickListener
+    private val listener: MyItemClickListener,
 ): RecyclerView.Adapter<MoviesViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
         return MoviesViewHolder(ActivityMainMovieListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -41,7 +39,7 @@ class MovieAdapter(
 
     fun refreshList(newDataList: ArrayList<MoviesData>) {
         movieList = newDataList
-        notifyDataSetChanged()
+        notifyItemChanged(movieList.size)
     }
 }
 

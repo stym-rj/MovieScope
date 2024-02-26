@@ -3,12 +3,23 @@
     <style name="Base.Theme.MovieScope" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@color/app_background</item>
     </style>
 
-    <style name="Theme.MovieScope" parent="Base.Theme.MovieScope" />
+    <style name="Theme.MovieScope" parent="Base.Theme.MovieScope">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
     <style name="Theme.App.SplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/app_background</item>
         <item name="android:windowSplashScreenAnimatedIcon">@mipmap/app_logo</item>
         <item name="postSplashScreenTheme">@style/Base.Theme.MovieScope</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
 </resources>
