@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:paddingVertical="8dp"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="280dp"
+    android:paddingLeft="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
@@ -14,9 +15,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/rvHorizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        android:padding="2dp"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="2dp"
         android:textSize="24dp"
-        android:text="Genre" />
+        android:textColor="@color/black"
+        android:text="Genre"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-black"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -26,7 +31,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvGenre"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:scrollbars="horizontal" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

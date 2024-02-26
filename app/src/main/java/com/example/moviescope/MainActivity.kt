@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +21,8 @@ import javax.security.auth.callback.Callback
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityMainBinding
-    private var genreList = listOf<GenreData>()
+    private var genreHash = HashMap<Int, GenreData>()
+    private var genreKeys = mutableListOf<Int>()
     private lateinit var genreAdapter: GenreAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,11 +32,12 @@ class MainActivity : AppCompatActivity() {
 
         binding =ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         binding.pb.visibility = View.VISIBLE
         val hash: HashMap<Int, ArrayList<MoviesData>> = HashMap()
         var moviesData = listOf<MoviesData>()
-        genreAdapter = GenreAdapter(genreList, hash)
+        genreAdapter = GenreAdapter(this, genreHash, hash, genreKeys)
         binding.rvVertical.layoutManager = LinearLayoutManager(this,RecyclerView.VERTICAL, false)
         binding.rvVertical.adapter = genreAdapter
 
@@ -68,43 +71,51 @@ class MainActivity : AppCompatActivity() {
                                 binding.rvVertical.visibility = View.VISIBLE
 
                                 val data = response.body() ?: listOf()
-                                genreAdapter.refreshList(data)
+                                for (i in data) {
+                                    genreHash[i.id] = i
+                                }
+                                genreAdapter.refreshList(genreHash, hash, hash.keys.toMutableList())
+
+                                Log.d("printing hash",  hash.toString())
+                                Log.d("printing movies",  moviesData.toString())
                             }
                         }
 
                         override fun onFailure(call: Call<List<GenreData>?>, t: Throwable) {
-                            Toast.makeText(this@MainActivity, "${t.message}", Toast.LENGTH_LONG).show()
+                            Toast.makeText(this@MainActivity, "Genre : ${t.message}", Toast.LENGTH_LONG).show()
+                            Log.d("printing failure in genre : ", "${t.message}")
                         }
                     })
                 }
             }
 
             override fun onFailure(call: Call<List<MoviesData>?>, t: Throwable) {
-                TODO("Not yet implemented")
+                Toast.makeText(this@MainActivity, "Movies : ${t.message}", Toast.LENGTH_LONG).show()
+                Log.d("printing failure in movies : ", "${t.message}")
             }
 
         })
 
 
-        genreApi.fetchGenre().enqueue(object : retrofit2.Callback<List<GenreData>?> {
-            override fun onResponse(
-                call: Call<List<GenreData>?>,
-                response: Response<List<GenreData>?>
-            ) {
-                if (response.isSuccessful) {
-                    binding.pb.visibility = View.GONE
-                    binding.rvVertical.visibility = View.VISIBLE
-
-                    val data = response.body() ?: listOf()
-                        Log.d("printing hash",  hash.toString())
-                        Log.d("printing movies",  moviesData.toString())
-                    genreAdapter.refreshList(data)
-                }
-            }
-
-            override fun onFailure(call: Call<List<GenreData>?>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "${t.message}", Toast.LENGTH_LONG).show()
-            }
-        })
+//        genreApi.fetchGenre().enqueue(object : retrofit2.Callback<List<GenreData>?> {
+//            override fun onResponse(
+//                call: Call<List<GenreData>?>,
+//                response: Response<List<GenreData>?>
+//            ) {
+//                if (response.isSuccessful) {
+//                    binding.pb.visibility = View.GONE
+//                    binding.rvVertical.visibility = View.VISIBLE
+//
+//                    val data = response.body() ?: listOf()
+//                        Log.d("printing hash",  hash.toString())
+//                        Log.d("printing movies",  moviesData.toString())
+//                    genreAdapter.refreshList(data, hash)
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<List<GenreData>?>, t: Throwable) {
+//                Toast.makeText(this@MainActivity, "${t.message}", Toast.LENGTH_LONG).show()
+//            }
+//        })
     }
 }
