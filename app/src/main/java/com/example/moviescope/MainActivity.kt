@@ -1,6 +1,5 @@
 package com.example.moviescope
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,15 +16,12 @@ import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.example.moviescope.databinding.ActivityMainBinding
-import com.example.moviescope.databinding.ActivityMainMovieListBinding
 import com.example.moviescope.networkUtils.GenreData
 import com.example.moviescope.networkUtils.MoviesData
 import com.example.moviescope.networkUtils.genreApi
 import com.example.moviescope.networkUtils.moviesApi
 import retrofit2.Call
 import retrofit2.Response
-import java.lang.Math.abs
-import java.util.Arrays
 
 class MainActivity : AppCompatActivity(), MyItemClickListener {
 
@@ -95,16 +91,12 @@ class MainActivity : AppCompatActivity(), MyItemClickListener {
                             if (response.isSuccessful) {
                                 binding.pb.visibility = View.GONE
                                 binding.rvVertical.visibility = View.VISIBLE
-                                Log.d("movie", response.body().toString())
 
                                 val data = response.body() ?: listOf()
                                 for (i in data) {
                                     genreHash[i.id] = i
                                 }
                                 genreAdapter.refreshList(genreHash, hash, hash.keys.toMutableList())
-
-                                Log.d("printing hash",  hash.toString())
-                                Log.d("printing movies",  moviesData.toString())
                             }
                         }
 
@@ -173,16 +165,6 @@ class MainActivity : AppCompatActivity(), MyItemClickListener {
     override fun onItemClicked(data: MoviesData) {
         Intent(this, MovieDescription::class.java).also {
             it.putExtra("moviesData", data)
-
-//            it.putExtra("backgroundImage", data.backgroundImage)
-//            it.putExtra("posterImage", data.poster)
-//            it.putExtra("movieTitle", data.movieTitle)
-//            it.putExtra("rating", data.rating)
-//            it.putExtra("ratingCount", data.ratingCount)
-//            it.putExtra("about", data.about)
-//            it.putExtra("language", data.language)
-//            it.putIntegerArrayListExtra("genre", ArrayList(data.genreList))
-//            it.putExtra("releaseDate", data.releaseDate)
             startActivity(it)
         }
     }

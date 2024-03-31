@@ -42,25 +42,6 @@ class MovieDescription : AppCompatActivity() {
         val releaseDate = data.releaseDate
 
 
-//        val backgroundImage = bundle!!.getString("backgroundImage")
-//        val posterImage = bundle.getString("posterImage")
-//        val movieTitle = bundle.getString("movieTitle")
-//        val rating = bundle.getFloat("rating")
-//        val ratingCount = bundle.getInt("ratingCount")
-//        val about = bundle.getString("about")
-//        val language = when (bundle.getString("language")) {
-//            "en" -> "English"
-//            "ko" -> "Korean"
-//            "de" -> "German"
-//            "es" -> "Spanish"
-//            "ja" -> "Japanese"
-//            "id" -> "Indonesian"
-//            "sv" -> "Swedish"
-//            else -> "Unknown"
-//        }
-//        val genre = bundle.getIntegerArrayList("genre")
-//        val releaseDate = bundle.getString("releaseDate")
-
         Glide.with(this).load("${imageUrlPrefix}${backgroundImage}").into(binding.ivMovieBackground)
         binding.tvMovieName.text = movieTitle
         binding.tvRatingCount.text = "($ratingCount)"
