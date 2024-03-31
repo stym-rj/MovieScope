@@ -1,11 +1,11 @@
 package com.example.moviescope
 
-const val MOVIES_BASE_URL = "https://run.mocky.io"
-const val MOVIES_ENDPOINT = "/v3/388d0946-9618-47b6-a9f6-0402ca804ed5"
+const val MOVIES_BASE_URL = "https://raw.githubusercontent.com/stym-rj/MovieScope/master/"
+const val MOVIES_ENDPOINT = "moviesData.json"
 // secret token = "MovieScopeMovie"
 
-const val GENRE_BASE_URL = "https://run.mocky.io"
-const val GENRE_ENDPOINT = "/v3/c6e15adf-e416-4e77-ac54-19e40f1419fa"
+const val GENRE_BASE_URL = "https://raw.githubusercontent.com/stym-rj/MovieScope/master/"
+const val GENRE_ENDPOINT = "genreData.json"
 // secret toke = "MovieScopeGenre"
 
 const val imageUrlPrefix = "https://image.tmdb.org/t/p/original/"

@@ -95,6 +95,7 @@ class MainActivity : AppCompatActivity(), MyItemClickListener {
                             if (response.isSuccessful) {
                                 binding.pb.visibility = View.GONE
                                 binding.rvVertical.visibility = View.VISIBLE
+                                Log.d("movie", response.body().toString())
 
                                 val data = response.body() ?: listOf()
                                 for (i in data) {
