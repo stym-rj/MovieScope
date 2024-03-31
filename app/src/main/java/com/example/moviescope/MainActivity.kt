@@ -1,5 +1,6 @@
 package com.example.moviescope
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,6 +17,7 @@ import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.example.moviescope.databinding.ActivityMainBinding
+import com.example.moviescope.databinding.ActivityMainMovieListBinding
 import com.example.moviescope.networkUtils.GenreData
 import com.example.moviescope.networkUtils.MoviesData
 import com.example.moviescope.networkUtils.genreApi
@@ -52,7 +54,7 @@ class MainActivity : AppCompatActivity(), MyItemClickListener {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 handler.removeCallbacks(runnable)
-                handler.postDelayed(runnable, 5000)
+                handler.postDelayed(runnable, 3500)
             }
         })
 
@@ -76,11 +78,12 @@ class MainActivity : AppCompatActivity(), MyItemClickListener {
                             if (hash[j] == null) {
                                 hash[j] = ArrayList()
                             }
-                            val temp = hash[j]
-                            temp?.add(i)
-                            if (temp != null) {
-                                hash[j] = temp
-                            }
+                            hash[j]?.add(i)
+//                            val temp = hash[j]
+//                            temp?.add(i)
+//                            if (temp != null) {
+//                                hash[j] = temp
+//                            }
                         }
                     }
 
@@ -127,7 +130,7 @@ class MainActivity : AppCompatActivity(), MyItemClickListener {
 
     override fun onResume() {
         super.onResume()
-        handler.postDelayed(runnable, 5000)
+        handler.postDelayed(runnable, 3500)
     }
 
     private val runnable = Runnable {
@@ -168,15 +171,17 @@ class MainActivity : AppCompatActivity(), MyItemClickListener {
 
     override fun onItemClicked(data: MoviesData) {
         Intent(this, MovieDescription::class.java).also {
-            it.putExtra("backgroundImage", data.backgroundImage)
-            it.putExtra("posterImage", data.poster)
-            it.putExtra("movieTitle", data.movieTitle)
-            it.putExtra("rating", data.rating)
-            it.putExtra("ratingCount", data.ratingCount)
-            it.putExtra("about", data.about)
-            it.putExtra("language", data.language)
-            it.putIntegerArrayListExtra("genre", ArrayList(data.genreList))
-            it.putExtra("releaseDate", data.releaseDate)
+            it.putExtra("moviesData", data)
+
+//            it.putExtra("backgroundImage", data.backgroundImage)
+//            it.putExtra("posterImage", data.poster)
+//            it.putExtra("movieTitle", data.movieTitle)
+//            it.putExtra("rating", data.rating)
+//            it.putExtra("ratingCount", data.ratingCount)
+//            it.putExtra("about", data.about)
+//            it.putExtra("language", data.language)
+//            it.putIntegerArrayListExtra("genre", ArrayList(data.genreList))
+//            it.putExtra("releaseDate", data.releaseDate)
             startActivity(it)
         }
     }

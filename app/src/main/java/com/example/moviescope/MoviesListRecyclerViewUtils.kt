@@ -1,10 +1,14 @@
 package com.example.moviescope
 
 import android.content.Context
+import android.opengl.Visibility
 import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.moviescope.databinding.ActivityMainBinding
 import com.example.moviescope.databinding.ActivityMainMovieListBinding
 import com.example.moviescope.networkUtils.MoviesData
 
@@ -15,9 +19,34 @@ class MoviesViewHolder(
         Glide.with(context).load("$imageUrlPrefix${data.poster}").into(binding.ivPoster)
         binding.tvMovieName.text = data.movieTitle
 
-        itemView.setOnClickListener {
-            listener.onItemClicked(data)
+        itemView.setOnTouchListener { view, motionEvent ->
+            when (motionEvent.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    binding.viewGradient.visibility = View.INVISIBLE
+                    binding.tvMovieName.visibility = View.INVISIBLE
+                    view.scaleY = 1.08f
+                    view.scaleX = 1.1f
+                    view.elevation = 0.0f
+                    view.performClick()
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    resetItemProperties(view)
+                }
+                MotionEvent.ACTION_UP -> {
+                    listener.onItemClicked(data)
+                    resetItemProperties(view)
+                }
+            }
+            true
         }
+    }
+
+    private fun resetItemProperties(view : View) {
+        binding.viewGradient.visibility = View.VISIBLE
+        binding.tvMovieName.visibility = View.VISIBLE
+        view.scaleX = 1.0f
+        view.scaleY = 1.0f
+        view.elevation = 18.0f
     }
 }
 

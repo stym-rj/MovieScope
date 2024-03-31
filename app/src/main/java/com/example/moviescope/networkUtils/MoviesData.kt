@@ -1,6 +1,7 @@
 package com.example.moviescope.networkUtils
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class MoviesData(
     @SerializedName("original_title")
@@ -32,4 +33,4 @@ data class MoviesData(
 
     @SerializedName("vote_count")
     val ratingCount : Int,
-)
+) : Serializable

@@ -6,6 +6,7 @@ import android.util.Log
 import com.bumptech.glide.Glide
 import com.example.moviescope.databinding.ActivityMovieDescriptionBinding
 import com.example.moviescope.networkUtils.GenreData
+import com.example.moviescope.networkUtils.MoviesData
 import com.example.moviescope.networkUtils.genreApi
 import retrofit2.Call
 import retrofit2.Response
@@ -19,13 +20,15 @@ class MovieDescription : AppCompatActivity() {
         setContentView(binding.root)
 
         val bundle: Bundle?= intent.extras
-        val backgroundImage = bundle!!.getString("backgroundImage")
-        val posterImage = bundle.getString("posterImage")
-        val movieTitle = bundle.getString("movieTitle")
-        val rating = bundle.getFloat("rating")
-        val ratingCount = bundle.getInt("ratingCount")
-        val about = bundle.getString("about")
-        val language = when (bundle.getString("language")) {
+        val data = bundle!!.getSerializable("moviesData")as MoviesData
+
+        val backgroundImage = data.backgroundImage
+        val posterImage = data.poster
+        val movieTitle = data.movieTitle
+        val rating = data.rating
+        val ratingCount = data.ratingCount
+        val about = data.about
+        val language = when (data.language) {
             "en" -> "English"
             "ko" -> "Korean"
             "de" -> "German"
@@ -35,8 +38,28 @@ class MovieDescription : AppCompatActivity() {
             "sv" -> "Swedish"
             else -> "Unknown"
         }
-        val genre = bundle.getIntegerArrayList("genre")
-        val releaseDate = bundle.getString("releaseDate")
+        val genre = data.genreList
+        val releaseDate = data.releaseDate
+
+
+//        val backgroundImage = bundle!!.getString("backgroundImage")
+//        val posterImage = bundle.getString("posterImage")
+//        val movieTitle = bundle.getString("movieTitle")
+//        val rating = bundle.getFloat("rating")
+//        val ratingCount = bundle.getInt("ratingCount")
+//        val about = bundle.getString("about")
+//        val language = when (bundle.getString("language")) {
+//            "en" -> "English"
+//            "ko" -> "Korean"
+//            "de" -> "German"
+//            "es" -> "Spanish"
+//            "ja" -> "Japanese"
+//            "id" -> "Indonesian"
+//            "sv" -> "Swedish"
+//            else -> "Unknown"
+//        }
+//        val genre = bundle.getIntegerArrayList("genre")
+//        val releaseDate = bundle.getString("releaseDate")
 
         Glide.with(this).load("${imageUrlPrefix}${backgroundImage}").into(binding.ivMovieBackground)
         binding.tvMovieName.text = movieTitle
