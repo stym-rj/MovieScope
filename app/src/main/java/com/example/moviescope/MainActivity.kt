@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), MyItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Thread.sleep(1500)
+//        Thread.sleep(1500)
         installSplashScreen()
 
         binding =ActivityMainBinding.inflate(layoutInflater)
